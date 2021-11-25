@@ -45,7 +45,7 @@ jobs:
           file: ./dockerfile
           builder: ${{ steps.buildx.outputs.name }}
           push: true
-          tags:  ${{ secrets.DOCKER_HUB_USERNAME }}/todo:${{ env.SHORT_SHA }}
+          tags:  ${{ secrets.DOCKER_HUB_USER }}/todo:${{ env.SHORT_SHA }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
           
