@@ -35,7 +35,7 @@ jobs:
       
       - name: Version(shot sha of git commit)
         id  : new_version
-        run : echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
+        run : echo "::set-output name=shortsha::$(echo ${GITHUB_SHA} | cut -c1-8)"
         
       - name: Build new version of image and push it to docker hub registry
         uses: docker/build-push-action@v2
@@ -46,7 +46,7 @@ jobs:
           file      : ./dockerfile
           builder   : ${{ steps.buildx.outputs.name }}
           push      : true
-          tags      :  ${{ secrets.DOCKER_HUB_USER }}/todo:${{ steps.new_version.outputs.SHORT_SHA }}
+          tags      :  ${{ secrets.DOCKER_HUB_USER }}/todo:${{ steps.new_version.outputs.shortsha }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to  : type=local,dest=/tmp/.buildx-cache
           
@@ -62,7 +62,7 @@ jobs:
      
      - name: Version(shot sha of git commit)
        id  : new_version
-       run : echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
+       run : echo "::set-output name=shortsha::$(echo ${GITHUB_SHA} | cut -c1-8)"
        
      - name: Configure my AWS Credentials
        uses: aws-actions/configure-aws-credentials@v1
@@ -78,7 +78,7 @@ jobs:
        run: kubectl get deployments
 
      - name: Update image in pods
-       run: kubectl set image deployment/todo-app-deployment todo-app=${{ secrets.DOCKERHUB_USER }}/todo-app:${{ steps.new_version.outputs.SHORT_SHA }}
+       run: kubectl set image deployment/todo-app-deployment todo-app=${{ secrets.DOCKERHUB_USER }}/todo-app:${{ steps.new_version.outputs.shortsha }}
          
      - name: Check deployment
        uses: kodermax/kubectl-aws-eks@master
