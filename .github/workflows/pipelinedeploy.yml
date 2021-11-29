@@ -78,7 +78,7 @@ jobs:
        run: kubectl get deployments
 
      - name: Update image in pods
-       run: kubectl set image deployment/todo-app-deployment todo-app=${{ secrets.DOCKERHUB_USER }}/todo-app:${{ steps.new_version.outputs.shortsha }}
+       run: kubectl set image deployment/todo-app-deployment todo-app=${{ secrets.DOCKER_HUB_USER }}/todo:${{ steps.new_version.outputs.shortsha }}
          
      - name: Check deployment
        uses: kodermax/kubectl-aws-eks@master
